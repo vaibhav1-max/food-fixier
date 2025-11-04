@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFixer - Connecting Surplus Food to Communities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc; 
+        }
+        .gradient-header {
+            background-image: linear-gradient(to right, #f97316, #ea580c); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+            backdrop-filter: blur(5px); 
+            background-color: rgba(249, 115, 22, 0.95); 
+        }
+        .floating-block {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem; 
+            padding: 2.5rem; 
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 10px 15px -5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            position: relative; 
+        }
+        .floating-block:hover {
+            transform: translateY(-8px); 
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15), 0 15px 20px -5px rgba(0, 0, 0, 0.08);
+        }
+        .partner-image {
+            width: 100%;
+            height: 180px; 
+            object-fit: cover; 
+            border-radius: 1rem; 
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .cta-button {
+            transition: all 0.3s ease;
+            background-color: rgba(249, 115, 22, 0.9); 
+            box-shadow: 0 5px 15px -5px rgba(249, 115, 22, 0.5);
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            background-color: rgba(249, 115, 22, 1); 
+            box-shadow: 0 8px 20px -5px rgba(249, 115, 22, 0.7);
+        }
+        /* Modal Styles */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+        }
+        .modal-content {
+            animation: slide-in 0.3s ease-out forwards;
+        }
+        @keyframes slide-in {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        /* Scroll Reveal Styles */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .scroll-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="gradient-header py-4 md:py-6 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white tracking-wider">
+                FoodFixer
+            </h1>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#" data-modal="home-modal" class="text-white hover:text-orange-200 font-medium transition duration-150 modal-trigger">Home</a>
+                <a href="#" data-modal="partners-modal" class="text-white hover:text-orange-200 font-medium transition duration-150 modal-trigger">Partners</a>
+                <a href="#" data-modal="about-modal" class="text-white hover:text-orange-200 font-medium transition duration-150 modal-trigger">About Us</a>
+                <a href="#" data-modal="contact-modal" class="text-white font-semibold px-4 py-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition duration-150 modal-trigger">Contact Us</a>
+                <button data-modal="register-modal" class="text-white font-bold px-5 py-2 rounded-full bg-red-600 hover:bg-red-700 transition duration-150 shadow-lg modal-trigger">Register</button>
+            </nav>
+            <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden">
+            <a href="#" data-modal="home-modal" class="block px-4 py-2 text-white hover:bg-orange-700 modal-trigger">Home</a>
+            <a href="#" data-modal="partners-modal" class="block px-4 py-2 text-white hover:bg-orange-700 modal-trigger">Partners</a>
+            <a href="#" data-modal="about-modal" class="block px-4 py-2 text-white hover:bg-orange-700 modal-trigger">About Us</a>
+            <a href="#" data-modal="contact-modal" class="block px-4 py-2 text-white hover:bg-orange-700 modal-trigger">Contact Us</a>
+            <button data-modal="register-modal" class="w-full text-left px-4 py-2 text-white font-bold bg-red-600 hover:bg-red-700 modal-trigger">Register</button>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-16 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <section id="hero" class="floating-block text-center mb-16 p-8 md:p-12">
+                <h2 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-5 tracking-tight leading-tight">
+                    Bridging Surplus, Nourishing Communities
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                    FoodFixer partners with the finest establishments—from local restaurants to large wedding venues—to ensure high-quality excess food reaches those in need, efficiently and safely.
+                </p>
+                <button data-modal="contact-modal" class="cta-button inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-full text-white md:py-4 md:text-lg md:px-10 modal-trigger">
+                    Join Our Mission Today
+                </button>
+
+                <div class="mt-12">
+                    <img src="https://via.placeholder.com/800x400/f97316/ffffff?text=FoodFixer+Community+Action" alt="Community food sharing" class="rounded-3xl mx-auto shadow-lg">
+                </div>
+            </section>
+            
+            <section id="partners-section" class="mb-16">
+                <h3 class="text-4xl font-bold text-gray-800 mb-12 text-center">
+                    Our Prototype Food Collection Sources
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+                    <div class="scroll-reveal">
+                        <div class="floating-block flex flex-col items-center text-center border-t-4 border-orange-600 cursor-pointer stock-trigger" data-store="The Grand Event Hall">
+                            <img src="https://cdn.pixabay.com/photo/2019/01/27/10/39/african-food-3957740_1280.jpg" alt="Catering from a large event venue" class="partner-image">
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-2">The Grand Event Hall</h4>
+                            <p class="text-sm text-orange-700 font-medium mb-4">Major Wedding & Banquet Venue</p>
+                            <p class="text-gray-700 leading-relaxed">A premium venue providing untouched banquet surplus from large weddings and corporate gatherings, focusing on volume donations.</p>
+                        </div>
+                    </div>
+
+                    <div class="scroll-reveal">
+                        <div class="floating-block flex flex-col items-center text-center border-t-4 border-orange-500 cursor-pointer stock-trigger" data-store="Mama Rosa's Italian Bistro">
+                            <img src="https://cdn.pixabay.com/photo/2024/04/18/10/41/ai-generated-8704061_1280.jpg" alt="Pasta dish from an Italian restaurant" class="partner-image">
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-2">Mama Rosa's Italian Bistro</h4>
+                            <p class="text-sm text-orange-700 font-medium mb-4">Neighborhood Italian Restaurant</p>
+                            <p class="text-gray-700 leading-relaxed">A favorite local spot donating prepped, unspoiled ingredients and end-of-day kitchen surplus on a rotating schedule.</p>
+                        </div>
+                    </div>
+
+                    <div class="scroll-reveal">
+                        <div class="floating-block flex flex-col items-center text-center border-t-4 border-orange-600 cursor-pointer stock-trigger" data-store="White Gown Event Planners">
+                            <img src="https://cdn.pixabay.com/photo/2016/11/18/18/32/wedding-1836315_1280.jpg" alt="Wedding cake and dessert display" class="partner-image">
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-2">White Gown Event Planners</h4>
+                            <p class="text-sm text-orange-700 font-medium mb-4">Luxury Wedding Planning Agency</p>
+                            <p class="text-gray-700 leading-relaxed">Facilitates food recovery directly from their scheduled events, coordinating pickup to ensure efficiency post-reception.</p>
+                        </div>
+                    </div>
+
+                    <div class="scroll-reveal">
+                        <div class="floating-block flex flex-col items-center text-center border-t-4 border-orange-500 cursor-pointer stock-trigger" data-store="Artisan Bakery & Cafe">
+                            <img src="https://cdn.pixabay.com/photo/2020/05/01/09/13/cupcakes-5116009_1280.jpg" alt="Fresh bread and pastries from Artisan Bakery" class="partner-image">
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-2">Artisan Bakery & Cafe</h4>
+                            <p class="text-sm text-orange-700 font-medium mb-4">High-Volume Local Bakery</p>
+                            <p class="text-gray-700 leading-relaxed">Supplying daily surplus of baked goods and prepared sandwiches, ideal for rapid community distribution.</p>
+                        </div>
+                    </div>
+
+                    <div class="scroll-reveal">
+                        <div class="floating-block flex flex-col items-center text-center border-t-4 border-orange-600 cursor-pointer stock-trigger" data-store="Central University Catering">
+                            <img src="https://cdn.pixabay.com/photo/2016/03/16/14/09/spaghetti-1260818_1280.jpg" alt="Buffet or cafeteria food" class="partner-image">
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-2">Central University Catering</h4>
+                            <p class="text-sm text-orange-700 font-medium mb-4">Large-Scale Institutional Food Service</p>
+                            <p class="text-gray-700 leading-relaxed">Provides consistent, large-scale donations from their weekly university cafeteria and special event catering operations.</p>
+                        </div>
+                    </div>
+
+                    <div class="scroll-reveal">
+                        <div class="floating-block flex flex-col items-center text-center border-t-4 border-orange-500 cursor-pointer stock-trigger" data-store="The Midnight Cafe">
+                            <img src="https://cdn.pixabay.com/photo/2022/01/07/19/19/cafe-decor-6922426_1280.jpg" alt="Daily specials from a cafe" class="partner-image">
+                            <h4 class="text-2xl font-semibold text-gray-900 mb-2">The Midnight Cafe</h4>
+                            <p class="text-sm text-orange-700 font-medium mb-4">Late-Night Bistro</p>
+                            <p class="text-gray-700 leading-relaxed">Focuses on donating small, highly consistent amounts of prepared food surplus every evening after closing hours.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="floating-block p-8 md:p-12">
+                <h3 class="text-4xl font-bold text-gray-800 mb-10 text-center">
+                    Quick Contact Info
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                    <div class="text-center">
+                        <div class="flex items-center justify-center space-x-3 text-orange-700 mb-3">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-2 4v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7"></path></svg>
+                            <h5 class="text-2xl font-semibold text-gray-900">Partner Support</h5>
+                        </div>
+                        <p class="text-md text-gray-500 mb-2">For ongoing restaurant and local business partnerships.</p>
+                        <p class="text-xl font-mono text-orange-700 mb-1">partner@foodfixer.org</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="flex items-center justify-center space-x-3 text-orange-700 mb-3">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <h5 class="text-2xl font-semibold text-gray-900">General & Media</h5>
+                        </div>
+                        <p class="text-md text-gray-500 mb-2">For press inquiries and general questions.</p>
+                        <p class="text-xl font-mono text-orange-700 mb-1">info@foodfixer.org</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="flex items-center justify-center space-x-3 text-orange-700 mb-3">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.5l1.5 4.5 1.5-4.5h3.5a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+                            <h5 class="text-2xl font-semibold text-gray-900">Event & Bulk Donations</h5>
+                        </div>
+                        <p class="text-md text-gray-500 mb-2">For large events, weddings, and one-time bulk food contributions.</p>
+                        <p class="text-xl font-mono text-orange-700 mb-1">events@foodfixer.org</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm md:text-base">&copy; 2025 FoodFixer Prototype. All rights reserved. | Built with passion to end food waste.</p>
+        </div>
+    </footer>
+
+
+    <div id="stock-modal" class="modal fixed inset-0 items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 md:p-12 rounded-xl max-w-lg w-full mx-4 shadow-2xl relative">
+            <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-light leading-none">&times;</button>
+            <h3 id="stock-title" class="text-3xl font-bold text-orange-600 mb-6 text-center">Available Stock</h3>
+            <div id="stock-content" class="space-y-4 text-gray-700">
+                <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-green-500">
+                    <p class="font-semibold text-lg">🍽️ **Entrees:** 50 servings of Mixed Grill (Ready for pickup at 7:00 PM)</p>
+                </div>
+                <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-blue-500">
+                    <p class="font-semibold text-lg">🍞 **Baked Goods:** 4 trays of Uncut Artisan Bread (Available now)</p>
+                </div>
+                <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-yellow-500">
+                    <p class="font-semibold text-lg">🍎 **Produce:** 1 case of Unopened Fruit Platter (Refrigerated)</p>
+                </div>
+                <p class="text-center text-sm mt-6 text-gray-500">This data is simulated and reflects a common type of donation from this partner.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="home-modal" class="modal fixed inset-0 items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 md:p-12 rounded-xl max-w-2xl w-full mx-4 shadow-2xl relative">
+            <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-light leading-none">&times;</button>
+            <h3 class="text-3xl font-bold text-orange-600 mb-4">Welcome to FoodFixer 🏠</h3>
+            <p class="text-lg text-gray-700 mb-6">Our platform is the nexus for change in the food waste ecosystem. We provide an instant, verifiable connection between businesses with surplus food and local charities in need.</p>
+            <p class="mt-6 text-sm text-gray-500">Click anywhere outside this box to return to the main page.</p>
+        </div>
+    </div>
+
+    <div id="partners-modal" class="modal fixed inset-0 items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 md:p-12 rounded-xl max-w-3xl w-full mx-4 shadow-2xl relative">
+            <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-light leading-none">&times;</button>
+            <h3 class="text-3xl font-bold text-orange-600 mb-4">Our Commitment to Partners 🤝</h3>
+            <p class="text-lg text-gray-700 mb-6">We simplify the donation process for businesses. Our partners benefit from tax deductions, reduced waste fees, and positive community engagement.</p>
+            <p class="mt-6 text-sm text-gray-500">Click anywhere outside this box to return to the main page.</p>
+        </div>
+    </div>
+
+    <div id="about-modal" class="modal fixed inset-0 items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 md:p-12 rounded-xl max-w-2xl w-full mx-4 shadow-2xl relative">
+            <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-light leading-none">&times;</button>
+            <h3 class="text-3xl font-bold text-orange-600 mb-4">Our Story & Vision 🌍</h3>
+            <p class="text-lg text-gray-700 mb-6">Founded in 2024, FoodFixer was built on the belief that no good food should go to waste while people go hungry.</p>
+            <p class="mt-6 text-sm text-gray-500">Click anywhere outside this box to return to the main page.</p>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="modal fixed inset-0 items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 md:p-12 rounded-xl max-w-xl w-full mx-4 shadow-2xl relative">
+            <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-light leading-none">&times;</button>
+            <h3 class="text-3xl font-bold text-orange-600 mb-4 text-center">Get in Touch 👋</h3>
+            
+            <form id="contact-form-modal" class="space-y-4">
+                <input type="text" name="name" placeholder="Your Name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                <input type="email" name="email" placeholder="Your Email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                <textarea name="message" rows="4" placeholder="Your Message or Inquiry" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500"></textarea>
+                <button type="submit" class="cta-button w-full py-3 text-lg font-bold rounded-lg text-white">
+                    Submit Inquiry
+                </button>
+            </form>
+            <div id="contact-submission-message" class="mt-4 p-3 rounded-lg text-center font-medium hidden"></div>
+
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal fixed inset-0 items-center justify-center hidden">
+        <div class="modal-content bg-white p-8 md:p-12 rounded-xl max-w-xl w-full mx-4 shadow-2xl relative">
+            <button class="modal-close absolute top-4 right-4 text-gray-500 hover:text-gray-900 text-3xl font-light leading-none">&times;</button>
+            <h3 class="text-3xl font-bold text-red-600 mb-4 text-center">New Partner Registration 📝</h3>
+            
+            <form id="registration-form" class="space-y-4">
+                <input type="text" name="org_name" placeholder="Organization/Business Name" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500">
+                <input type="text" name="contact_person" placeholder="Primary Contact Person" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500">
+                <input type="email" name="org_email" placeholder="Organization Email" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500">
+                <select name="type" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500">
+                    <option value="" disabled selected>Select Organization Type</option>
+                    <option value="Restaurant">Restaurant</option>
+                    <option value="Catering">Catering / Event Venue</option>
+                    <option value="Bakery">Bakery / Cafe</option>
+                    <option value="Institution">Institution (University, Hospital)</option>
+                    <option value="Other">Other</option>
+                </select>
+                <button type="submit" class="w-full py-3 text-lg font-bold rounded-lg text-white bg-red-600 hover:bg-red-700 transition duration-150">
+                    Submit Registration
+                </button>
+            </form>
+            <div id="registration-submission-message" class="mt-4 p-3 rounded-lg text-center font-medium hidden"></div>
+
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- SCROLL REVEAL LOGIC ---
+            const revealElements = document.querySelectorAll('.scroll-reveal');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            revealElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // --- MODAL CONTROL LOGIC ---
+            const modalTriggers = document.querySelectorAll('.modal-trigger');
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.modal-close');
+            const stockTriggers = document.querySelectorAll('.stock-trigger');
+
+            const closeModal = (modal) => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = ''; 
+            };
+
+            const openModal = (modalId) => {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex'); 
+                    document.body.style.overflow = 'hidden'; 
+                }
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && mobileMenu.classList.contains('block')) {
+                    mobileMenu.classList.remove('block');
+                    mobileMenu.classList.add('hidden');
+                }
+            }
+
+            // Global Modal Triggers (Header Links and CTA Button)
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    const modalId = trigger.dataset.modal;
+                    openModal(modalId);
+                });
+            });
+
+            // Partner Stock Triggers (Clickable Cards)
+            stockTriggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const storeName = trigger.dataset.store;
+                    document.getElementById('stock-title').textContent = `Stock from: ${storeName}`;
+                    
+                    // Dynamic stock content generation based on partner name (simulation)
+                    const stockContent = document.getElementById('stock-content');
+                    if (storeName.includes('Bistro') || storeName.includes('Cafe')) {
+                        stockContent.innerHTML = `
+                            <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-red-500">
+                                <p class="font-semibold text-lg">🍝 **Prepared Meals:** 20 portions of Lasagna (Ready at 9:30 PM)</p>
+                            </div>
+                            <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-yellow-500">
+                                <p class="font-semibold text-lg">🥗 **Salad:** 1 Large Catering Salad (Best by Midnight)</p>
+                            </div>
+                            <p class="text-center text-sm mt-6 text-gray-500">Simulated stock for a neighborhood restaurant.</p>
+                        `;
+                    } else if (storeName.includes('Event') || storeName.includes('Catering')) {
+                        stockContent.innerHTML = `
+                            <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-green-500">
+                                <p class="font-semibold text-lg">🥩 **Entrees:** 50 servings of Roasted Chicken (Ready for pickup at 11:00 PM)</p>
+                            </div>
+                            <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-blue-500">
+                                <p class="font-semibold text-lg">🍰 **Dessert:** 10 Trays of Individual Pastries (Untouched)</p>
+                            </div>
+                            <p class="text-center text-sm mt-6 text-gray-500">Simulated stock for a major event/institutional venue.</p>
+                        `;
+                    } else {
+                        stockContent.innerHTML = `
+                            <div class="p-3 bg-gray-100 rounded-lg border-l-4 border-gray-500">
+                                <p class="font-semibold text-lg">📦 **Mixed:** 3 boxes of Mixed Surplus Food (Check details on site)</p>
+                            </div>
+                            <p class="text-center text-sm mt-6 text-gray-500">Simulated stock details.</p>
+                        `;
+                    }
+
+                    openModal('stock-modal');
+                });
+            });
+
+
+            // Close Buttons and Backdrop Click
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = button.closest('.modal');
+                    if (modal) closeModal(modal);
+                });
+            });
+
+            modals.forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal);
+                    }
+                });
+            });
+
+            // Form Submissions (Contact and Register) - Existing logic
+            const contactForm = document.getElementById('contact-form-modal');
+            const contactMessage = document.getElementById('contact-submission-message');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); 
+                    contactMessage.textContent = 'Submitting inquiry...';
+                    contactMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-yellow-100 text-yellow-800';
+                    contactMessage.style.display = 'block';
+                    setTimeout(() => {
+                        contactMessage.textContent = '✅ Contact received! We will respond within 24 hours.';
+                        contactMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-green-100 text-green-800';
+                        this.reset();
+                        setTimeout(() => {
+                            closeModal(document.getElementById('contact-modal'));
+                            contactMessage.style.display = 'none';
+                        }, 3000);
+                    }, 2000); 
+                });
+            }
+
+            const registerForm = document.getElementById('registration-form');
+            const registerMessage = document.getElementById('registration-submission-message');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); 
+                    registerMessage.textContent = 'Processing registration...';
+                    registerMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-yellow-100 text-yellow-800';
+                    registerMessage.style.display = 'block';
+                    setTimeout(() => {
+                        registerMessage.textContent = '🥳 Success! Your organization is pre-registered. Check your email for verification steps.';
+                        registerMessage.className = 'mt-4 p-3 rounded-lg text-center font-medium bg-green-100 text-green-800';
+                        this.reset();
+                        setTimeout(() => {
+                            closeModal(document.getElementById('register-modal'));
+                            registerMessage.style.display = 'none';
+                        }, 5000);
+                    }, 2000); 
+                });
+            }
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenu.classList.toggle('block');
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
